@@ -11,9 +11,13 @@
     "build:production": "npm run prestart && npm prune --production",
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@kentico/kontent-management": "^0.1.0",
+    "rxjs": "^6.5.3"
+  },
   "devDependencies": {
     "@azure/functions": "^1.0.2-beta2",
+    "@types/node": "^12.11.1",
     "typescript": "^3.3.3"
   }
 }
