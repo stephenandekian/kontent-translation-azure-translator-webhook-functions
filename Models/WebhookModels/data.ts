@@ -1,5 +1,5 @@
-import { ContentItemModels } from '@kentico/kontent-management'
+import { Item } from ".";
 
 export type Data = {
-  items: [ContentItemModels.ContentItem]
+  items: [Item]
 }

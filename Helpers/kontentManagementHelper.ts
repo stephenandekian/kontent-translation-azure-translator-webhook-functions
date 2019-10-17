@@ -2,15 +2,14 @@ import {
   ManagementClient,
   LanguageVariantModels
 } from '@kentico/kontent-management'
+import { constants } from './constants'
 
 let client: ManagementClient = initializeClient()
 
 function initializeClient(): ManagementClient {
-  const projectId = process.env['KontentProjectID']
-  const apiKey = process.env['KontentManagementApiKey']
   return new ManagementClient({
-    projectId,
-    apiKey
+    projectId: constants.kontentProjectId,
+    apiKey: constants.kontentManagementApiKey
   })
 }
 
@@ -20,7 +19,7 @@ export async function getDefaultLanguageVariant(
   var defaultLanguageVariant = await client
     .viewLanguageVariant()
     .byItemId(contentItemId)
-    .byLanguageId('00000000-0000-0000-0000-000000000000')
+    .byLanguageId(constants.defaultLanguageId)
     .toPromise()
 
   return defaultLanguageVariant.data
