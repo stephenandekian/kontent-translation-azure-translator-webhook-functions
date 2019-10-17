@@ -1,5 +1,3 @@
-import { WebhookNotification } from '../Models/WebhookNotification'
-
 export function isWebHookValid(request: any): boolean {
   const webhookIsValid: boolean =
     request != null &&

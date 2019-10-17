@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { isWebHookValid } from '../Helpers/webhookHelpers'
-import { WebhookNotification } from '../Models/WebhookNotification'
+import * as WebhookModels from '../Models/WebhookModels'
 
 const httpTrigger: AzureFunction = async function(
   context: Context,
@@ -8,7 +8,7 @@ const httpTrigger: AzureFunction = async function(
 ): Promise<void> {
 
   if (isWebHookValid(request)) {
-    const notification = request.body as WebhookNotification
+    const notification = request.body as WebhookModels.Notification
 
     //const defaultLanguageVariant = await getDefaultLanguageVariant(contentItemId)
 
