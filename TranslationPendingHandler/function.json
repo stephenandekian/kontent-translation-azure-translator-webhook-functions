@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/SendForTranslationHandler/index.js"
+  "scriptFile": "../dist/TranslationPendingHandler/index.js"
 }

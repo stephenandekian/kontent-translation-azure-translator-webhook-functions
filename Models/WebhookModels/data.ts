@@ -1,5 +1,5 @@
-import { Item } from ".";
+import { WorkflowEventItem } from ".";
 
 export type Data = {
-  items: [Item]
+  items: [WorkflowEventItem]
 }

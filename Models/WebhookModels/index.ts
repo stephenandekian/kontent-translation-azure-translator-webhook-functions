@@ -1,4 +1,4 @@
 export * from './data'
-export * from './item'
+export * from './workflowEventItem'
 export * from './message'
 export * from './notification'
