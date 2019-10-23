@@ -97,6 +97,6 @@ function getTranslationElementModel(
   contentType: ContentTypeModels.ContentType
 ) {
   return contentType.elements.find(
-    (e) => e.codename === constants.settingsCustomElementCodename
+    (e) => e.codename === constants.translationElementCodename
   )
 }

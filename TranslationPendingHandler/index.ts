@@ -1,14 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import * as WebhookHelpers from '../Helpers/webhookHelpers'
-import * as Models from '../Models'
 import { constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
-import {
-  ContentTypeModels,
-  LanguageVariantModels,
-  ElementModels,
-  ContentItemModels
-} from '@kentico/kontent-management'
+import { LanguageVariantModels } from '@kentico/kontent-management'
 
 const httpTrigger: AzureFunction = async function(
   context: Context,
@@ -27,7 +21,9 @@ const httpTrigger: AzureFunction = async function(
     return WebhookHelpers.getResponse('New translation job started')
   } else {
     await translateLanguageVariant(defaultLanguageVariant)
-    return WebhookHelpers.getResponse(`Language translated: ${workflowEventItem.language.id}`)
+    return WebhookHelpers.getResponse(
+      `Language translated: ${workflowEventItem.language.id}`
+    )
   }
 }
 
@@ -48,7 +44,6 @@ async function startNewTranslation(
 async function clearTranslationTimestamps(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ) {
-
   const t9nDetails = await KontentHelpers.getTranslationDetails(
     defaultLanguageVariant
   )
@@ -76,14 +71,14 @@ async function clearTranslationTimestamps(
 async function translateLanguageVariant(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ): Promise<void> {
-    // Set language started timestamp in DLV
-    // Get elements to translate from DLV
-    // Translate element values
-    // Set LV element values
-    // Upsert LV to save translation
-    // Change LV WF to "review"
-    // Set language completed timestamp in DLV
-    // Upsert DLV to save LV timestamps
+  // Set language started timestamp in DLV
+  // Get elements to translate from DLV
+  // Translate element values
+  // Set LV element values
+  // Upsert LV to save translation
+  // Change LV WF to "review"
+  // Set language completed timestamp in DLV
+  // Upsert DLV to save LV timestamps
 }
 
 export default httpTrigger

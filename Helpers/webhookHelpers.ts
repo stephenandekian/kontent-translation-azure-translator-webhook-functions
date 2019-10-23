@@ -1,12 +1,5 @@
 import { HttpRequest } from '@azure/functions'
 import * as WebhookModels from '../Models/WebhookModels'
-import {
-  ContentTypeModels,
-  LanguageVariantModels,
-  ElementModels
-} from '@kentico/kontent-management'
-import { TranslationState } from '../Models/TranslationElementModels'
-import { constants } from './constants'
 
 export function isRequestValid(request: HttpRequest): boolean {
   // TODO: Add signature hash check
