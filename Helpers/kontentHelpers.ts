@@ -23,6 +23,31 @@ export async function changeWorkflowStep(
   languageId: string,
   workflowStepId: string
 ): Promise<void> {
+  let languageVariant = await getLanguageVariant(contentItemId, languageId)
+
+  const exists = !!languageVariant
+  if (exists) {
+    const isPublished =
+      languageVariant.workflowStep.id ===
+      constants.kontentPublishedWorkflowStepId
+
+    if (isPublished) {
+      await client
+        .createNewVersionOfLanguageVariant()
+        .byItemId(contentItemId)
+        .byLanguageId(languageId)
+        .toPromise()
+    }
+  } else {
+    const response = await client
+      .upsertLanguageVariant()
+      .byItemId(contentItemId)
+      .byLanguageId(languageId)
+      .withElements([])
+      .toPromise()
+    languageVariant = response.data
+  }
+
   await client
     .changeWorkflowStepOfLanguageVariant()
     .byItemId(contentItemId)
@@ -56,10 +81,17 @@ export async function getContentType(
 export async function getDefaultLanguageVariant(
   contentItemId: string
 ): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
+  return await getLanguageVariant(contentItemId, constants.defaultLanguageId)
+}
+
+export async function getLanguageVariant(
+  contentItemId: string,
+  languageId: string
+): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
   const clientResponse = await client
     .viewLanguageVariant()
     .byItemId(contentItemId)
-    .byLanguageId(constants.defaultLanguageId)
+    .byLanguageId(languageId)
     .toPromise()
 
   return clientResponse.data
@@ -70,8 +102,11 @@ export async function getTranslationDetails(
 ): Promise<Models.TranslationDetails> {
   const contentItem = await getContentItemById(languageVariant.item.id)
   const contentType = await getContentType(contentItem.type.id)
-  const translationElement = await getTranslationElement(contentType, languageVariant)
-  return (translationElement.value as unknown) as Models.TranslationDetails
+  const translationElement = await getTranslationElement(
+    contentType,
+    languageVariant
+  )
+  return new Models.TranslationDetails(translationElement.value as string)
 }
 
 export async function upsertLanguageVariant(
@@ -84,6 +119,9 @@ export async function upsertLanguageVariant(
     .byLanguageId(languageVariant.language.id)
     .withElements(elements)
     .toPromise()
+    .catch(reason=> {
+      console.log(reason)
+    })
 }
 
 async function getTranslationElement(
@@ -103,16 +141,18 @@ async function getTranslationElementModel(
     constants.translationSnippetCodename
   )
 
-  return snippetTypeModel.elements.find(e=>{
+  return snippetTypeModel.elements.find((e) => {
     return e.codename === constants.translationElementCodename
   })
 }
 
-async function getSnippetTypeModelByCodename(codename: string): Promise<ContentTypeModels.ContentType> {
+async function getSnippetTypeModelByCodename(
+  codename: string
+): Promise<ContentTypeModels.ContentType> {
   const result = await client
     .viewContentTypeSnippet()
     .byTypeCodename(codename)
     .toPromise()
 
-    return result.data
+  return result.data
 }

@@ -3,6 +3,7 @@ import * as WebhookHelpers from '../Helpers/webhookHelpers'
 import { constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
 import { LanguageVariantModels } from '@kentico/kontent-management'
+import * as Models from '../Models'
 
 const httpTrigger: AzureFunction = async function(
   context: Context,
@@ -30,24 +31,33 @@ const httpTrigger: AzureFunction = async function(
 async function startNewTranslation(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ) {
-  // Clear translation timestamps
-  await clearTranslationTimestamps(defaultLanguageVariant)
-
-  // Change first language to pending
-  // await KontentHelpers.changeWorkflowStep(
-  //   defaultLanguageVariant.item.id,
-  //   defaultLanguageVariant.language.id,
-  //   constants.kontentTranslationPendingWorkflowStepId
-  // )
-}
-
-async function clearTranslationTimestamps(
-  defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
-) {
   const t9nDetails = await KontentHelpers.getTranslationDetails(
     defaultLanguageVariant
   )
 
+  // Clear translation timestamps
+  await clearTranslationTimestamps(defaultLanguageVariant, t9nDetails)
+
+  const firstLanguage =
+    t9nDetails.selectedLanguages.length > 0
+      ? t9nDetails.selectedLanguages[0]
+      : null
+
+  if (!firstLanguage) {
+    return
+  }
+
+  await KontentHelpers.changeWorkflowStep(
+    defaultLanguageVariant.item.id,
+    firstLanguage.id,
+    constants.kontentTranslationPendingWorkflowStepId
+  )
+}
+
+async function clearTranslationTimestamps(
+  defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant,
+  t9nDetails: Models.TranslationDetails
+) {
   t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map(
     (language) => {
       return {
@@ -59,7 +69,7 @@ async function clearTranslationTimestamps(
   )
 
   const t9nElement = {
-    element: { codename: constants.translationElementCodename },
+    element: { codename: `${constants.translationSnippetCodename}__${constants.translationElementCodename}` },
     value: JSON.stringify(t9nDetails)
   }
 
