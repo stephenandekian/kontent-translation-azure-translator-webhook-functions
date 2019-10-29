@@ -9,4 +9,5 @@ export namespace constants {
     process.env['KontentTranslationPendingWorkflowStepId']
   export const kontentTranslationReviewWorkflowStepId: string =
     process.env['KontentTranslationReviewWorkflowStepId']
+  export const kontentPublishedWorkflowStepId: string = process.env['KontentPublishedWorkflowStepId']
 }
