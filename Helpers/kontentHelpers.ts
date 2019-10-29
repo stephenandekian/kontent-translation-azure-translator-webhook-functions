@@ -2,7 +2,8 @@ import {
   ManagementClient,
   LanguageVariantModels,
   ContentTypeModels,
-  ContentItemModels
+  ContentItemModels,
+  ElementModels
 } from '@kentico/kontent-management'
 import { constants } from './constants'
 import * as Models from '../Models'
@@ -67,36 +68,51 @@ export async function getDefaultLanguageVariant(
 export async function getTranslationDetails(
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ): Promise<Models.TranslationDetails> {
-  const contentType = await getContentType(languageVariant.item.id)
-  const translationElement = getTranslationElement(contentType, languageVariant)
-  return translationElement.value as unknown as Models.TranslationDetails
+  const contentItem = await getContentItemById(languageVariant.item.id)
+  const contentType = await getContentType(contentItem.type.id)
+  const translationElement = await getTranslationElement(contentType, languageVariant)
+  return (translationElement.value as unknown) as Models.TranslationDetails
 }
 
 export async function upsertLanguageVariant(
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant,
   elements: Array<LanguageVariantModels.ILanguageVariantElement>
 ) {
-  await client.upsertLanguageVariant()
-      .byItemId(languageVariant.item.id)
-      .byLanguageId(languageVariant.language.id)
-      .withElements(elements)
-      .toPromise()
+  await client
+    .upsertLanguageVariant()
+    .byItemId(languageVariant.item.id)
+    .byLanguageId(languageVariant.language.id)
+    .withElements(elements)
+    .toPromise()
 }
 
-function getTranslationElement(
+async function getTranslationElement(
   contentType: ContentTypeModels.ContentType,
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
-  ) {
-    const translationElementModel = getTranslationElementModel(contentType)
-    return languageVariant.elements.find(
-      (e) => e.element.id === translationElementModel.id
+) {
+  const translationElementModel = await getTranslationElementModel(contentType)
+  return languageVariant.elements.find(
+    (e) => e.element.id === translationElementModel.id
   )
 }
 
-function getTranslationElementModel(
+async function getTranslationElementModel(
   contentType: ContentTypeModels.ContentType
 ) {
-  return contentType.elements.find(
-    (e) => e.codename === constants.translationElementCodename
+  const snippetTypeModel = await getSnippetTypeModelByCodename(
+    constants.translationSnippetCodename
   )
+
+  return snippetTypeModel.elements.find(e=>{
+    return e.codename === constants.translationElementCodename
+  })
+}
+
+async function getSnippetTypeModelByCodename(codename: string): Promise<ContentTypeModels.ContentType> {
+  const result = await client
+    .viewContentTypeSnippet()
+    .byTypeCodename(codename)
+    .toPromise()
+
+    return result.data
 }
