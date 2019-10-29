@@ -16,7 +16,7 @@ const httpTrigger: AzureFunction = async function(
     workflowEventItem.item.id
   )
 
-  if (workflowEventItem.languageIsDefault()) {
+  if (WebhookHelpers.isLanguageDefault(workflowEventItem.language.id)) {
     await startNewTranslation(defaultLanguageVariant)
     return WebhookHelpers.getResponse('New translation job started')
   } else {
@@ -34,11 +34,11 @@ async function startNewTranslation(
   await clearTranslationTimestamps(defaultLanguageVariant)
 
   // Change first language to pending
-  await KontentHelpers.changeWorkflowStep(
-    defaultLanguageVariant.item.id,
-    defaultLanguageVariant.language.id,
-    constants.kontentTranslationPendingWorkflowStepId
-  )
+  // await KontentHelpers.changeWorkflowStep(
+  //   defaultLanguageVariant.item.id,
+  //   defaultLanguageVariant.language.id,
+  //   constants.kontentTranslationPendingWorkflowStepId
+  // )
 }
 
 async function clearTranslationTimestamps(
