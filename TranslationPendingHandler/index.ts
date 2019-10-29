@@ -21,7 +21,10 @@ const httpTrigger: AzureFunction = async function(
     await startNewTranslation(defaultLanguageVariant)
     return WebhookHelpers.getResponse('New translation job started')
   } else {
-    await translateLanguageVariant(defaultLanguageVariant)
+    await translateLanguageVariant(
+      defaultLanguageVariant,
+      workflowEventItem.language.id
+    )
     return WebhookHelpers.getResponse(
       `Language translated: ${workflowEventItem.language.id}`
     )
@@ -68,27 +71,58 @@ async function clearTranslationTimestamps(
     }
   )
 
+  await updateTranslationDetails(t9nDetails, defaultLanguageVariant)
+}
+
+async function updateTranslationDetails(
+  t9nDetails: Models.TranslationDetails,
+  languageVariant: LanguageVariantModels.ContentItemLanguageVariant
+) {
   const t9nElement = {
-    element: { codename: `${constants.translationSnippetCodename}__${constants.translationElementCodename}` },
+    element: {
+      codename: `${constants.translationSnippetCodename}__${constants.translationElementCodename}`
+    },
     value: JSON.stringify(t9nDetails)
   }
-
-  await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant, [
-    t9nElement
-  ])
+  await KontentHelpers.upsertLanguageVariant(languageVariant, [t9nElement])
 }
 
 async function translateLanguageVariant(
-  defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
+  defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant,
+  currentLanguageId: string
 ): Promise<void> {
+  let t9nDetails = await KontentHelpers.getTranslationDetails(
+    defaultLanguageVariant
+  )
+
   // Set language started timestamp in DLV
+  updateTimestamp(t9nDetails, currentLanguageId, "started")
+
   // Get elements to translate from DLV
   // Translate element values
   // Set LV element values
   // Upsert LV to save translation
   // Change LV WF to "review"
+
   // Set language completed timestamp in DLV
+  updateTimestamp(t9nDetails, currentLanguageId, "completed")
+
   // Upsert DLV to save LV timestamps
+  updateTranslationDetails(t9nDetails, defaultLanguageVariant)
+}
+
+function updateTimestamp(
+  t9nDetails: Models.TranslationDetails,
+  currentLanguageId: string,
+  timestampName: string
+) {
+  t9nDetails.selectedLanguages.forEach((l) => {
+    const languageIsCurrentLanguage = l.id === currentLanguageId
+    if (languageIsCurrentLanguage) {
+      l[timestampName] = new Date()
+    }
+    return l
+  })
 }
 
 export default httpTrigger
