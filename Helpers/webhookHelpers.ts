@@ -1,5 +1,6 @@
 import { HttpRequest } from '@azure/functions'
 import * as WebhookModels from '../Models/WebhookModels'
+import { constants } from './constants'
 
 export function isRequestValid(request: HttpRequest): boolean {
   // TODO: Add signature hash check
@@ -25,4 +26,8 @@ export function getWorkflowEventItem(
 ): WebhookModels.WorkflowEventItem {
   const notification = request.body as WebhookModels.Notification
   return notification.data.items[0]
+}
+
+export function isLanguageDefault(languageId: string): boolean {
+  return languageId === constants.defaultLanguageId
 }
