@@ -93,6 +93,9 @@ export async function getLanguageVariant(
     .byItemId(contentItemId)
     .byLanguageId(languageId)
     .toPromise()
+    .catch(_reason => {
+      return { data: null }
+    })
 
   return clientResponse.data
 }
