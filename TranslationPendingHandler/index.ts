@@ -77,8 +77,16 @@ async function translateLanguageVariant(
   updateTimestamp(t9nDetails, currentLanguageId, 'started')
 
   // Get elements to translate from DLV
-  //const translatableElementIds = getTranslatableElementIds(defaultLanguageVariant)
+  const contentItem = await KontentHelpers.getContentItemById(defaultLanguageVariant.item.id)
+  const contentType = await KontentHelpers.getContentType(contentItem.type.id)
+  const translatableElementIds = getTranslatableElementIds(contentType.elements)
+  const translatableElementValues = getTranslatableElementValues(
+    defaultLanguageVariant.elements,
+    translatableElementIds
+  )
+
   // Translate element values
+
   // Set LV element values
   // Upsert LV to save translation
   // Change LV WF to "review"
@@ -100,14 +108,15 @@ function updateTimestamp(t9nDetails: Models.TranslationDetails, currentLanguageI
   })
 }
 
-function getNontranslatableElements(elementValues, elementIds) {
-  return elementValues.filter(element => !elementIds.includes(element.element.id))
+function getTranslatableElementIds(elements: ElementModels.ElementModel[]): string[] {
+  return elements.filter(element => element.type === 'text' || element.type === 'rich_text').map(element => element.id)
 }
 
-function getTranslatableElementIds(elements: ElementModels.ElementModel[]) {
-  return elements
-    .map(element => (element.type === 'text' || element.type === 'rich_text' ? element.id : undefined))
-    .filter(element => element !== undefined)
+function getTranslatableElementValues(
+  elementValues: ElementModels.ContentItemElement[],
+  elementIds: string[]
+): ElementModels.ContentItemElement[] {
+  return elementValues.filter(element => elementIds.includes(element.element.id))
 }
 
 export default httpTrigger
