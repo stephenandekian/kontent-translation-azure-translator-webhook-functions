@@ -1,12 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import * as WebhookHelpers from '../Helpers/webhookHelpers'
 
-const httpTrigger: AzureFunction = async function(
-  context: Context,
-  request: HttpRequest
-) {
-  if (!WebhookHelpers.isRequestValid(request))
-    return WebhookHelpers.getResponse('Invalid webhook', 400)
+const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
+  if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook', 400)
 
   const workflowEventItem = WebhookHelpers.getWorkflowEventItem(request)
 

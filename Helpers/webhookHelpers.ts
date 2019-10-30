@@ -6,10 +6,7 @@ export function isRequestValid(request: HttpRequest): boolean {
   // TODO: Add signature hash check
 
   const webhookIsValid: boolean =
-    request != null &&
-    request.body != null &&
-    request.body.message != null &&
-    request.body.message.id != null
+    request != null && request.body != null && request.body.message != null && request.body.message.id != null
 
   return webhookIsValid
 }
@@ -17,13 +14,11 @@ export function isRequestValid(request: HttpRequest): boolean {
 export function getResponse(body: string = 'Ok', status: number = 200) {
   return {
     status,
-    body
+    body,
   }
 }
 
-export function getWorkflowEventItem(
-  request: HttpRequest
-): WebhookModels.WorkflowEventItem {
+export function getWorkflowEventItem(request: HttpRequest): WebhookModels.WorkflowEventItem {
   const notification = request.body as WebhookModels.Notification
   return notification.data.items[0]
 }
