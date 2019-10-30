@@ -104,14 +104,15 @@ export async function getTranslationDetails(
 }
 
 export async function upsertLanguageVariant(
-  languageVariant: LanguageVariantModels.ContentItemLanguageVariant,
-  elements: Array<LanguageVariantModels.ILanguageVariantElement>
+  itemId: string,
+  languageId: string,
+  elements: Array<LanguageVariantModels.ILanguageVariantElementCodename>
 ) {
   await client
     .upsertLanguageVariant()
-    .byItemId(languageVariant.item.id)
-    .byLanguageId(languageVariant.language.id)
-    .withElements(elements)
+    .byItemId(itemId)
+    .byLanguageId(languageId)
+    .withElementCodenames(elements)
     .toPromise()
     .catch(reason => {
       console.log(reason)

@@ -4,6 +4,7 @@ import { constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
 import { LanguageVariantModels, ElementModels } from '@kentico/kontent-management'
 import * as Models from '../Models'
+import * as TranslationHelper from '../Helpers/translationHelper'
 
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
   if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook', 400)
@@ -59,12 +60,10 @@ async function updateTranslationDetails(
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ) {
   const t9nElement = {
-    element: {
-      codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
-    },
+    codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
     value: JSON.stringify(t9nDetails),
   }
-  await KontentHelpers.upsertLanguageVariant(languageVariant, [t9nElement])
+  await KontentHelpers.upsertLanguageVariant(languageVariant.item.id, languageVariant.language.id, [t9nElement])
 }
 
 async function translateLanguageVariant(
@@ -72,6 +71,7 @@ async function translateLanguageVariant(
   currentLanguageId: string
 ): Promise<void> {
   let t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
+  const currentLanguage = t9nDetails.selectedLanguages.find(language => language.id === currentLanguageId)
 
   // Set language started timestamp in DLV
   updateTimestamp(t9nDetails, currentLanguageId, 'started')
@@ -86,10 +86,28 @@ async function translateLanguageVariant(
   )
 
   // Translate element values
+  const translatedElementValues = await TranslationHelper.translate(translatableElementValues, currentLanguage.codename)
 
   // Set LV element values
+  const untranslatedElementValues = getUntranslatableElementValues(
+    defaultLanguageVariant.elements,
+    translatableElementIds
+  )
+  const elementValuesCombined = [...translatableElementValues, ...untranslatedElementValues]
+  const elementValuesToSave = elementValuesCombined.map(element => ({
+    codename: element.element.codename,
+    value: element.value,
+  }))
+
   // Upsert LV to save translation
+  await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant.item.id, currentLanguageId, elementValuesToSave)
+
   // Change LV WF to "review"
+  await KontentHelpers.changeWorkflowStep(
+    defaultLanguageVariant.item.id,
+    currentLanguageId,
+    constants.kontentWorkflowStepIdTranslationReview
+  )
 
   // Set language completed timestamp in DLV
   updateTimestamp(t9nDetails, currentLanguageId, 'completed')
@@ -117,6 +135,13 @@ function getTranslatableElementValues(
   elementIds: string[]
 ): ElementModels.ContentItemElement[] {
   return elementValues.filter(element => elementIds.includes(element.element.id))
+}
+
+function getUntranslatableElementValues(
+  elementValues: ElementModels.ContentItemElement[],
+  elementIds: string[]
+): ElementModels.ContentItemElement[] {
+  return elementValues.filter(element => !elementIds.includes(element.element.id))
 }
 
 export default httpTrigger
