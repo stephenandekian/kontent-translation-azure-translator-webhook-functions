@@ -35,7 +35,7 @@ async function startNewTranslation(defaultLanguageVariant: LanguageVariantModels
   await KontentHelpers.changeWorkflowStep(
     defaultLanguageVariant.item.id,
     firstLanguage.id,
-    constants.kontentTranslationPendingWorkflowStepId
+    constants.kontentWorkflowStepIdTranslationPending
   )
 }
 
@@ -60,7 +60,7 @@ async function updateTranslationDetails(
 ) {
   const t9nElement = {
     element: {
-      codename: `${constants.translationSnippetCodename}__${constants.translationElementCodename}`,
+      codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
     },
     value: JSON.stringify(t9nDetails),
   }

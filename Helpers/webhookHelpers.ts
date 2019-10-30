@@ -24,5 +24,5 @@ export function getWorkflowEventItem(request: HttpRequest): WebhookModels.Workfl
 }
 
 export function isLanguageDefault(languageId: string): boolean {
-  return languageId === constants.defaultLanguageId
+  return languageId === constants.kontentDefaultLanguageId
 }

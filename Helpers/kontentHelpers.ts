@@ -27,7 +27,7 @@ export async function changeWorkflowStep(
 
   const exists = !!languageVariant
   if (exists) {
-    const isPublished = languageVariant.workflowStep.id === constants.kontentPublishedWorkflowStepId
+    const isPublished = languageVariant.workflowStep.id === constants.kontentWorkflowStepIdPublished
 
     if (isPublished) {
       await client
@@ -75,7 +75,7 @@ export async function getContentType(contentTypeId: string): Promise<ContentType
 export async function getDefaultLanguageVariant(
   contentItemId: string
 ): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
-  return await getLanguageVariant(contentItemId, constants.defaultLanguageId)
+  return await getLanguageVariant(contentItemId, constants.kontentDefaultLanguageId)
 }
 
 export async function getLanguageVariant(
@@ -127,10 +127,10 @@ async function getTranslationElement(
 }
 
 async function getTranslationElementModel(contentType: ContentTypeModels.ContentType) {
-  const snippetTypeModel = await getSnippetTypeModelByCodename(constants.translationSnippetCodename)
+  const snippetTypeModel = await getSnippetTypeModelByCodename(constants.kontentTranslationSnippetCodename)
 
   return snippetTypeModel.elements.find(e => {
-    return e.codename === constants.translationElementCodename
+    return e.codename === constants.kontentTranslationElementCodename
   })
 }
 
