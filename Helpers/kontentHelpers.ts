@@ -143,3 +143,34 @@ async function getSnippetTypeModelByCodename(codename: string): Promise<ContentT
 
   return result.data
 }
+
+export async function updateTranslationDetails(
+  t9nDetails: Models.TranslationDetails,
+  languageVariant: LanguageVariantModels.ContentItemLanguageVariant
+) {
+  const t9nElement = {
+    element: {
+      codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
+    },
+    value: JSON.stringify(t9nDetails),
+  }
+  await upsertLanguageVariant(languageVariant.item.id, languageVariant.language.id, [t9nElement])
+}
+
+export function updateTimestamp(
+  t9nDetails: Models.TranslationDetails,
+  currentLanguageId: string,
+  timestampName: string
+) {
+  t9nDetails.selectedLanguages.forEach(l => {
+    const languageIsCurrentLanguage = l.id === currentLanguageId
+    if (languageIsCurrentLanguage) {
+      l[timestampName] = new Date()
+    }
+    return l
+  })
+}
+
+export function getNextLanguage(t9nDetails: Models.TranslationDetails) {
+  return t9nDetails.selectedLanguages.find(l => l.completed === null)
+}
