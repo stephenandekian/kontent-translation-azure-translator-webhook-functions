@@ -30,10 +30,7 @@ async function translateWithAzure(
         'Content-Type': 'application/json',
       },
     })
-    console.log(`translator response`)
-    console.log(response)
     elementValues.forEach((element, index) => {
-      console.log(`translations: ${response.data[index].translations}`)
       element.value = response.data[index].translations[0].text.replace(/<br>/g, '<br/>')
     })
 
