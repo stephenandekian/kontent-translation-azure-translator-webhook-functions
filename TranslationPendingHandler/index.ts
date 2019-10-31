@@ -60,7 +60,9 @@ async function updateTranslationDetails(
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ) {
   const t9nElement = {
-    codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
+    element: {
+      codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
+    },
     value: JSON.stringify(t9nDetails),
   }
   await KontentHelpers.upsertLanguageVariant(languageVariant.item.id, languageVariant.language.id, [t9nElement])
@@ -94,13 +96,15 @@ async function translateLanguageVariant(
     translatableElementIds
   )
   const elementValuesCombined = [...translatableElementValues, ...untranslatedElementValues]
-  const elementValuesToSave = elementValuesCombined.map(element => ({
-    codename: element.element.codename,
-    value: element.value,
-  }))
+  // const elementValuesToSave = elementValuesCombined.map(element => ({
+  //   element: {
+  //     codename: contentType.elements.find(e=> e.id ===element.element.id).codename,
+  //   },
+  //   value: element.value,
+  // }))
 
   // Upsert LV to save translation
-  await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant.item.id, currentLanguageId, elementValuesToSave)
+  await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant.item.id, currentLanguageId, elementValuesCombined as Array<LanguageVariantModels.ILanguageVariantElement>)
 
   // Change LV WF to "review"
   await KontentHelpers.changeWorkflowStep(
