@@ -96,15 +96,15 @@ async function translateLanguageVariant(
     translatableElementIds
   )
   const elementValuesCombined = [...translatableElementValues, ...untranslatedElementValues]
-  // const elementValuesToSave = elementValuesCombined.map(element => ({
-  //   element: {
-  //     codename: contentType.elements.find(e=> e.id ===element.element.id).codename,
-  //   },
-  //   value: element.value,
-  // }))
 
   // Upsert LV to save translation
   await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant.item.id, currentLanguageId, elementValuesCombined as Array<LanguageVariantModels.ILanguageVariantElement>)
+
+  // Set language completed timestamp in DLV
+  updateTimestamp(t9nDetails, currentLanguageId, 'completed')
+
+  // Upsert DLV to save LV timestamps
+  updateTranslationDetails(t9nDetails, defaultLanguageVariant)
 
   // Change LV WF to "review"
   await KontentHelpers.changeWorkflowStep(
@@ -112,12 +112,6 @@ async function translateLanguageVariant(
     currentLanguageId,
     constants.kontentWorkflowStepIdTranslationReview
   )
-
-  // Set language completed timestamp in DLV
-  updateTimestamp(t9nDetails, currentLanguageId, 'completed')
-
-  // Upsert DLV to save LV timestamps
-  updateTranslationDetails(t9nDetails, defaultLanguageVariant)
 }
 
 function updateTimestamp(t9nDetails: Models.TranslationDetails, currentLanguageId: string, timestampName: string) {
