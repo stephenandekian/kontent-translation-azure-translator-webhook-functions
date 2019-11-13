@@ -1,19 +1,19 @@
 import {
-  ManagementClient,
-  LanguageVariantModels,
-  ContentTypeModels,
   ContentItemModels,
+  ContentTypeModels,
   ElementModels,
+  LanguageVariantModels,
+  ManagementClient,
 } from '@kentico/kontent-management'
-import { constants } from './constants'
 import * as Models from '../Models'
+import { Constants } from './constants'
 
-let client: ManagementClient = initializeClient()
+const client: ManagementClient = initializeClient()
 
 function initializeClient(): ManagementClient {
   return new ManagementClient({
-    projectId: constants.kontentProjectId,
-    apiKey: constants.kontentManagementApiKey,
+    apiKey: Constants.kontentManagementApiKey,
+    projectId: Constants.kontentProjectId,
   })
 }
 
@@ -26,7 +26,7 @@ export async function changeWorkflowStep(
 
   const exists = !!languageVariant
   if (exists) {
-    const isPublished = languageVariant.workflowStep.id === constants.kontentWorkflowStepIdPublished
+    const isPublished = languageVariant.workflowStep.id === Constants.kontentWorkflowStepIdPublished
 
     if (isPublished) {
       await client
@@ -74,7 +74,7 @@ export async function getContentType(contentTypeId: string): Promise<ContentType
 export async function getDefaultLanguageVariant(
   contentItemId: string
 ): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
-  return await getLanguageVariant(contentItemId, constants.kontentDefaultLanguageId)
+  return await getLanguageVariant(contentItemId, Constants.kontentDefaultLanguageId)
 }
 
 export async function getLanguageVariant(
@@ -86,7 +86,7 @@ export async function getLanguageVariant(
     .byItemId(contentItemId)
     .byLanguageId(languageId)
     .toPromise()
-    .catch(_reason => {
+    .catch(() => {
       return { data: null }
     })
 
@@ -103,7 +103,7 @@ export async function getTranslationDetails(
 export async function upsertLanguageVariant(
   itemId: string,
   languageId: string,
-  elements: Array<LanguageVariantModels.ILanguageVariantElement>
+  elements: LanguageVariantModels.ILanguageVariantElement[]
 ): Promise<void> {
   await client
     .upsertLanguageVariant()
@@ -121,10 +121,10 @@ async function getTranslationElement(
 }
 
 async function getTranslationElementModel(): Promise<ElementModels.ElementModel> {
-  const snippetTypeModel = await getSnippetTypeModelByCodename(constants.kontentTranslationSnippetCodename)
+  const snippetTypeModel = await getSnippetTypeModelByCodename(Constants.kontentTranslationSnippetCodename)
 
   return snippetTypeModel.elements.find(e => {
-    return e.codename === constants.kontentTranslationElementCodename
+    return e.codename === Constants.kontentTranslationElementCodename
   })
 }
 
@@ -143,7 +143,7 @@ export async function updateTranslationDetails(
 ): Promise<void> {
   const t9nElement = {
     element: {
-      codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
+      codename: `${Constants.kontentTranslationSnippetCodename}__${Constants.kontentTranslationElementCodename}`,
     },
     value: JSON.stringify(t9nDetails),
   }

@@ -1,7 +1,7 @@
 import { LanguageDetails } from '.'
 
 export class TranslationDetails {
-  selectedLanguages: Array<LanguageDetails>
+  public selectedLanguages: LanguageDetails[]
 
   constructor(raw: string) {
     const value = JSON.parse(raw) as TranslationDetails

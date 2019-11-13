@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import axios from 'axios'
 import { ElementModels } from '@kentico/kontent-management'
-import { constants } from './constants'
+import axios from 'axios'
+import { Constants } from './constants'
 
 export async function translate(
   elementValues: ElementModels.ContentItemElement[],
@@ -14,18 +14,18 @@ async function translateWithAzure(
   elementValues: ElementModels.ContentItemElement[],
   languageCodename: string
 ): Promise<ElementModels.ContentItemElement[]> {
-  const key = constants.azureTranslatorTextKey
-  const endpoint = constants.azureTranslatorTextEndpoint
+  const key = Constants.azureTranslatorTextKey
+  const endpoint = Constants.azureTranslatorTextEndpoint
 
   const translatorTextData = elementValues.map(element => ({
     text: element.value,
   }))
-  let translatorTextUrl = `${endpoint}translate?api-version=3.0&textType=html&from=en&to=${languageCodename}`
+  const translatorTextUrl = `${endpoint}translate?api-version=3.0&textType=html&from=en&to=${languageCodename}`
 
   const response = await axios.post(translatorTextUrl, translatorTextData, {
     headers: {
-      'Ocp-Apim-Subscription-Key': key,
       'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': key,
     },
   })
   elementValues.forEach((element, index) => {

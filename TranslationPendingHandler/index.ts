@@ -1,14 +1,17 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import * as WebhookHelpers from '../Helpers/webhookHelpers'
-import { constants } from '../Helpers/constants'
+import { ElementModels, LanguageVariantModels } from '@kentico/kontent-management'
+import { Constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
-import { LanguageVariantModels, ElementModels } from '@kentico/kontent-management'
-import * as Models from '../Models'
 import * as TranslationHelper from '../Helpers/translationHelper'
+import * as WebhookHelpers from '../Helpers/webhookHelpers'
+import * as Models from '../Models'
 
+// We don't want to break Azure's template, so we're disabling the only-arrow-functions rule
+// tslint:disable-next-line: only-arrow-functions
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
-  if (!WebhookHelpers.isRequestValid(request))
+  if (!WebhookHelpers.isRequestValid(request)) {
     return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
+  }
 
   const workflowEventItem = WebhookHelpers.getWorkflowEventItem(request)
   const defaultLanguageVariant = await KontentHelpers.getDefaultLanguageVariant(workflowEventItem.item.id)
@@ -37,7 +40,7 @@ async function startNewTranslation(defaultLanguageVariant: LanguageVariantModels
   await KontentHelpers.changeWorkflowStep(
     defaultLanguageVariant.item.id,
     firstLanguage.id,
-    constants.kontentWorkflowStepIdTranslationPending
+    Constants.kontentWorkflowStepIdTranslationPending
   )
 }
 
@@ -48,8 +51,8 @@ async function clearTranslationTimestamps(
   t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map(language => {
     return {
       ...language,
-      started: null,
       completed: null,
+      started: null,
     }
   })
 
@@ -60,7 +63,7 @@ async function translateLanguageVariant(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant,
   currentLanguageId: string
 ): Promise<void> {
-  let t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
+  const t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
   const currentLanguage = t9nDetails.selectedLanguages.find(language => language.id === currentLanguageId)
 
   // Set language started timestamp in DLV
@@ -92,14 +95,14 @@ async function translateLanguageVariant(
   await KontentHelpers.upsertLanguageVariant(
     defaultLanguageVariant.item.id,
     currentLanguageId,
-    elementValuesCombined as Array<LanguageVariantModels.ILanguageVariantElement>
+    elementValuesCombined as LanguageVariantModels.ILanguageVariantElement[]
   )
 
   // Change LV WF to "review"
   await KontentHelpers.changeWorkflowStep(
     defaultLanguageVariant.item.id,
     currentLanguageId,
-    constants.kontentWorkflowStepIdTranslationReview
+    Constants.kontentWorkflowStepIdTranslationReview
   )
 }
 
