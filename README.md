@@ -27,17 +27,19 @@ This is deployed like any other Azure function project. You can [automate the de
 
 You'll need to configure two [webhooks](https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates). The project must be [deployed to Azure](#deploying-to-azure) or you must be able to pipe requests to your local machine via a public URL using a tool like [ngrok](https://ngrok.com/). Either way you need a publicly accessible URL for Kontent to be able to send requests to.
 
-### Send for translation webhook
+### Translation pending webhook
 
 The first webhook is for triggering the actual translation. The `URL address` for this webhook will point to the `TranslationPendingHandler` endpoint in this project. The URL will look something like: `https://<PUBLIC_BASE_DOMAIN>/api/TranslationPendingHandler`.
 
-You also need to configure the `Workflow steps of content items to watch` trigger to a dedicated workflow step designed to trigger the translation connecter. I recommend `Translation pending` as the name, but it could be anything.
+You also need to configure ONYL the `Workflow steps of content items to watch` trigger to a dedicated workflow step designed to trigger the translation connecter. I recommend `Translation pending` as the name, but it could be anything. The triggers should essentially look like this:
+![Trigger configuration](Images/webhook-triggers-send-for-translation.png)
 
 ### Translation complete webhook
 
 The second webhook is for signaling that a translation has finished and start the next translation. The `URL address` for this webhook will point to the `TranslationReviewHandler` endpoint in this project. The URL will look something like: `https://<PUBLIC_BASE_DOMAIN>/api/TranslationReviewHandler`.
 
-You also need to configure the `Workflow steps of content items to watch` trigger to a dedicated workflow step designed that indicates that a translation is complete and ready for review. I recommend `Translation review` as the name, but it could be anything.
+You also need to configure the `Workflow steps of content items to watch` trigger to a dedicated workflow step designed that indicates that a translation is complete and ready for review. I recommend `Translation review` as the name, but it could be anything. The triggers should essentially look like this:
+![Trigger configuration](Images/webhook-triggers-translation-complete.png)
 
 ## Environment variables
 
