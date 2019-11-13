@@ -24,8 +24,7 @@ export async function changeWorkflowStep(
 ): Promise<void> {
   let languageVariant = await getLanguageVariant(contentItemId, languageId)
 
-  const exists = !!languageVariant
-  if (exists) {
+  if (languageVariant) {
     const isPublished = languageVariant.workflowStep.id === Constants.kontentWorkflowStepIdPublished
 
     if (isPublished) {
