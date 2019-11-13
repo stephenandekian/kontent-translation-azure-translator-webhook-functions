@@ -97,9 +97,7 @@ export async function getLanguageVariant(
 export async function getTranslationDetails(
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ): Promise<Models.TranslationDetails> {
-  const contentItem = await getContentItemById(languageVariant.item.id)
-  const contentType = await getContentType(contentItem.type.id)
-  const translationElement = await getTranslationElement(contentType, languageVariant)
+  const translationElement = await getTranslationElement(languageVariant)
   return new Models.TranslationDetails(translationElement.value as string)
 }
 
@@ -107,7 +105,7 @@ export async function upsertLanguageVariant(
   itemId: string,
   languageId: string,
   elements: Array<LanguageVariantModels.ILanguageVariantElement>
-) {
+): Promise<void> {
   await client
     .upsertLanguageVariant()
     .byItemId(itemId)
@@ -117,14 +115,13 @@ export async function upsertLanguageVariant(
 }
 
 async function getTranslationElement(
-  contentType: ContentTypeModels.ContentType,
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
-) {
-  const translationElementModel = await getTranslationElementModel(contentType)
+): Promise<ElementModels.ContentItemElement> {
+  const translationElementModel = await getTranslationElementModel()
   return languageVariant.elements.find(e => e.element.id === translationElementModel.id)
 }
 
-async function getTranslationElementModel(contentType: ContentTypeModels.ContentType) {
+async function getTranslationElementModel(): Promise<ElementModels.ElementModel> {
   const snippetTypeModel = await getSnippetTypeModelByCodename(constants.kontentTranslationSnippetCodename)
 
   return snippetTypeModel.elements.find(e => {
@@ -144,7 +141,7 @@ async function getSnippetTypeModelByCodename(codename: string): Promise<ContentT
 export async function updateTranslationDetails(
   t9nDetails: Models.TranslationDetails,
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
-) {
+): Promise<void> {
   const t9nElement = {
     element: {
       codename: `${constants.kontentTranslationSnippetCodename}__${constants.kontentTranslationElementCodename}`,
@@ -158,7 +155,7 @@ export function updateTimestamp(
   t9nDetails: Models.TranslationDetails,
   currentLanguageId: string,
   timestampName: string
-) {
+): void {
   t9nDetails.selectedLanguages.forEach(l => {
     const languageIsCurrentLanguage = l.id === currentLanguageId
     if (languageIsCurrentLanguage) {
@@ -168,6 +165,6 @@ export function updateTimestamp(
   })
 }
 
-export function getNextLanguage(t9nDetails: Models.TranslationDetails) {
+export function getNextLanguage(t9nDetails: Models.TranslationDetails): Models.LanguageDetails {
   return t9nDetails.selectedLanguages.find(l => l.completed === null)
 }
