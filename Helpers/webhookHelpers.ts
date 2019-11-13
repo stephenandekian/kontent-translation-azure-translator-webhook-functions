@@ -15,7 +15,7 @@ export function isRequestValid(request: HttpRequest): boolean {
   return webhookIsValid
 }
 
-export function getResponse(body: string = 'Ok', status: number = 200) {
+export function getResponse(body: string = 'Ok', status: number = 200): any {
   return {
     body,
     status,

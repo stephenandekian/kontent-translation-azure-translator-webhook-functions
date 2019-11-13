@@ -6,8 +6,8 @@ import * as TranslationHelper from '../Helpers/translationHelper'
 import * as WebhookHelpers from '../Helpers/webhookHelpers'
 import * as Models from '../Models'
 
-// We don't want to break Azure's template, so we're disabling the only-arrow-functions rule
-// tslint:disable-next-line: only-arrow-functions
+// We don't want to break Azure's template, so we're disabling some rules
+// tslint:disable-next-line: typedef only-arrow-functions
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
   if (!WebhookHelpers.isRequestValid(request)) {
     return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
@@ -25,7 +25,9 @@ const httpTrigger: AzureFunction = async function(context: Context, request: Htt
   }
 }
 
-async function startNewTranslation(defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant) {
+async function startNewTranslation(
+  defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant
+): Promise<void> {
   const t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
 
   // Clear translation timestamps
@@ -47,7 +49,7 @@ async function startNewTranslation(defaultLanguageVariant: LanguageVariantModels
 async function clearTranslationTimestamps(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant,
   t9nDetails: Models.TranslationDetails
-) {
+): Promise<void> {
   t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map(language => {
     return {
       ...language,

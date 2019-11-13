@@ -3,8 +3,8 @@ import { Constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
 import * as WebhookHelpers from '../Helpers/webhookHelpers'
 
-// We don't want to break Azure's template, so we're disabling the only-arrow-functions rule
-// tslint:disable-next-line: only-arrow-functions
+// We don't want to break Azure's template, so we're disabling some rules selectively
+// tslint:disable-next-line: only-arrow-functions typedef
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
   if (!WebhookHelpers.isRequestValid(request)) {
     return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
