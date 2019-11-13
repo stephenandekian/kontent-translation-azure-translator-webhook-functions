@@ -57,8 +57,8 @@ async function clearTranslationTimestamps(
   t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map((language: Models.LanguageDetails) => {
     return {
       ...language,
-      completed: undefined,
-      started: undefined,
+      completed: null,
+      started: null,
     } as Models.LanguageDetails
   })
 
