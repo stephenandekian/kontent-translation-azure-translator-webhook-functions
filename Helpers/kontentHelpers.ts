@@ -114,9 +114,6 @@ export async function upsertLanguageVariant(
     .byLanguageId(languageId)
     .withElements(elements)
     .toPromise()
-    .catch(reason => {
-      console.log(reason)
-    })
 }
 
 async function getTranslationElement(
