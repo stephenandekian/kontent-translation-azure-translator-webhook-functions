@@ -7,7 +7,6 @@ import {
 } from '@kentico/kontent-management'
 import { constants } from './constants'
 import * as Models from '../Models'
-import { async } from 'rxjs/internal/scheduler/async'
 
 let client: ManagementClient = initializeClient()
 
