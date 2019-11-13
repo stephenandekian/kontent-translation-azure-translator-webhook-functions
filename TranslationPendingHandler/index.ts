@@ -54,12 +54,12 @@ async function clearTranslationTimestamps(
   defaultLanguageVariant: LanguageVariantModels.ContentItemLanguageVariant,
   t9nDetails: Models.TranslationDetails
 ): Promise<void> {
-  t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map(language => {
+  t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map((language: Models.LanguageDetails) => {
     return {
       ...language,
       completed: undefined,
       started: undefined,
-    }
+    } as Models.LanguageDetails
   })
 
   await KontentHelpers.updateTranslationDetails(t9nDetails, defaultLanguageVariant)

@@ -163,12 +163,13 @@ export async function updateTranslationDetails(
   t9nDetails: Models.TranslationDetails,
   languageVariant: LanguageVariantModels.ContentItemLanguageVariant
 ): Promise<void> {
-  const t9nElement = {
+  const t9nElement: LanguageVariantModels.ILanguageVariantElement = {
     element: {
       codename: `${Constants.kontentTranslationSnippetCodename}__${Constants.kontentTranslationElementCodename}`,
     },
     value: JSON.stringify(t9nDetails),
   }
+
   if (languageVariant.item.id && languageVariant.language.id) {
     await upsertLanguageVariant(languageVariant.item.id, languageVariant.language.id, [t9nElement])
   } else {
