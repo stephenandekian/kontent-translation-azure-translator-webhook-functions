@@ -1,6 +1,6 @@
 import { Data, Message } from '.'
 
-export class Notification {
+export interface Notification {
   data: Data
   message: Message
 }

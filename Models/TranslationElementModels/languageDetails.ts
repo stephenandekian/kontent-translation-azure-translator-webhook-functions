@@ -1,4 +1,4 @@
-export type LanguageDetails = {
+export interface LanguageDetails {
   id: string
   codename: string
   name: string

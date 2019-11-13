@@ -7,7 +7,8 @@ import * as Models from '../Models'
 import * as TranslationHelper from '../Helpers/translationHelper'
 
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
-  if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
+  if (!WebhookHelpers.isRequestValid(request))
+    return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
 
   const workflowEventItem = WebhookHelpers.getWorkflowEventItem(request)
   const defaultLanguageVariant = await KontentHelpers.getDefaultLanguageVariant(workflowEventItem.item.id)
@@ -88,7 +89,11 @@ async function translateLanguageVariant(
   const elementValuesCombined = [...translatedElementValues, ...untranslatedElementValues]
 
   // Upsert LV to save translation
-  await KontentHelpers.upsertLanguageVariant(defaultLanguageVariant.item.id, currentLanguageId, elementValuesCombined as Array<LanguageVariantModels.ILanguageVariantElement>)
+  await KontentHelpers.upsertLanguageVariant(
+    defaultLanguageVariant.item.id,
+    currentLanguageId,
+    elementValuesCombined as Array<LanguageVariantModels.ILanguageVariantElement>
+  )
 
   // Change LV WF to "review"
   await KontentHelpers.changeWorkflowStep(

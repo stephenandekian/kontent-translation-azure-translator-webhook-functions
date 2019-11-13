@@ -1,4 +1,4 @@
-export type Message = {
+export interface Message {
   id: string
   project_id: string
   type: string

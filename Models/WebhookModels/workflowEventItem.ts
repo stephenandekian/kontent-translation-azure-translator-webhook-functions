@@ -1,4 +1,4 @@
-export class WorkflowEventItem {
+export interface WorkflowEventItem {
   item: { id: string }
   language: { id: string }
   transition_from: { id: string }

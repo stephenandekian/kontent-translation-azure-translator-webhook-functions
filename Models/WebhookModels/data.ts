@@ -1,5 +1,5 @@
 import { WorkflowEventItem } from '.'
 
-export type Data = {
+export interface Data {
   items: [WorkflowEventItem]
 }

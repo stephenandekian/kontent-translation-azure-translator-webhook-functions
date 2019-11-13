@@ -4,7 +4,8 @@ import * as KontentHelpers from '../Helpers/kontentHelpers'
 import { constants } from '../Helpers/constants'
 
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
-  if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
+  if (!WebhookHelpers.isRequestValid(request))
+    return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
 
   const workflowEventItem = WebhookHelpers.getWorkflowEventItem(request)
 
@@ -15,15 +16,23 @@ const httpTrigger: AzureFunction = async function(context: Context, request: Htt
 
     // Set language completed timestamp in DLV
     KontentHelpers.updateTimestamp(t9nDetails, workflowEventItem.language.id, 'completed')
-    await KontentHelpers.updateTranslationDetails(t9nDetails,defaultLanguageVariant)
+    await KontentHelpers.updateTranslationDetails(t9nDetails, defaultLanguageVariant)
 
     // if there's another language move it to pending WF step
     const nextLanguage = KontentHelpers.getNextLanguage(t9nDetails)
-    if(nextLanguage) {
-      await KontentHelpers.changeWorkflowStep(workflowEventItem.item.id, nextLanguage.id, constants.kontentWorkflowStepIdTranslationPending)
+    if (nextLanguage) {
+      await KontentHelpers.changeWorkflowStep(
+        workflowEventItem.item.id,
+        nextLanguage.id,
+        constants.kontentWorkflowStepIdTranslationPending
+      )
     } else {
       // else move DLV to review workflow step
-      await KontentHelpers.changeWorkflowStep(workflowEventItem.item.id, constants.kontentDefaultLanguageId, constants.kontentWorkflowStepIdTranslationReview)
+      await KontentHelpers.changeWorkflowStep(
+        workflowEventItem.item.id,
+        constants.kontentDefaultLanguageId,
+        constants.kontentWorkflowStepIdTranslationReview
+      )
     }
   }
 
