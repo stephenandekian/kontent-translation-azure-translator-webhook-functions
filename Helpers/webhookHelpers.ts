@@ -6,7 +6,11 @@ export function isRequestValid(request: HttpRequest): boolean {
   // TODO: Add signature hash check
 
   const webhookIsValid: boolean =
-    request != null && request.body != null && request.body.message != null && request.body.message.id != null
+    request != null &&
+    request.body != null &&
+    request.body.message != null &&
+    request.body.message.operation != null &&
+    request.body.message.operation === "change_workflow_step"
 
   return webhookIsValid
 }

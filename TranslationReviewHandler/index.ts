@@ -4,7 +4,7 @@ import * as KontentHelpers from '../Helpers/kontentHelpers'
 import { constants } from '../Helpers/constants'
 
 const httpTrigger: AzureFunction = async function(context: Context, request: HttpRequest) {
-  if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook', 400)
+  if (!WebhookHelpers.isRequestValid(request)) return WebhookHelpers.getResponse('Invalid webhook. Not from Kontent or trigger is not a workflow step change', 400)
 
   const workflowEventItem = WebhookHelpers.getWorkflowEventItem(request)
 
