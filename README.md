@@ -19,7 +19,6 @@ Features:
    1. You can use a tool like [ngrok](https://ngrok.com/) to pipe requests from Kontent to your local machine
 1. The project is now ready to be [configured in Kentico Kontent](#configuring-kentico-kontent)
 
-
 ## Deploying to Azure
 
 This is deployed like any other Azure function project. You can [automate the deployment](https://docs.microsoft.com/en-us/azure/azure-functions/functions-continuous-deployment) or [manually deploy](https://docs.microsoft.com/en-us/azure/javascript/tutorial-vscode-serverless-node-01) with the [Azure Functions extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions).
