@@ -1,4 +1,4 @@
-import { LanguageDetails } from '.'
+import { LanguageDetails } from './languageDetails'
 
 export class TranslationDetails {
   public selectedLanguages: LanguageDetails[]
