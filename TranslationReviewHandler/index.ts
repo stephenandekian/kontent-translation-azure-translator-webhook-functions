@@ -2,6 +2,7 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { Constants } from '../Helpers/constants'
 import * as KontentHelpers from '../Helpers/kontentHelpers'
 import * as WebhookHelpers from '../Helpers/webhookHelpers'
+import * as Models from '../Models'
 
 // We don't want to break Azure's template, so we're disabling some rules selectively
 // tslint:disable-next-line: only-arrow-functions typedef
@@ -18,7 +19,7 @@ const httpTrigger: AzureFunction = async function(context: Context, request: Htt
     const t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
 
     // Set language completed timestamp in DLV
-    KontentHelpers.updateTimestamp(t9nDetails, workflowEventItem.language.id, 'completed')
+    KontentHelpers.updateTimestamp(t9nDetails, workflowEventItem.language.id, Models.Timestamps.Completed)
     await KontentHelpers.updateTranslationDetails(t9nDetails, defaultLanguageVariant)
 
     // if there's another language move it to pending WF step
@@ -31,6 +32,10 @@ const httpTrigger: AzureFunction = async function(context: Context, request: Htt
       )
     } else {
       // else move DLV to review workflow step
+      if (!Constants.kontentWorkflowStepIdTranslationReview) {
+        throw Error('Translation review workflow step ID is undefined')
+      }
+
       await KontentHelpers.changeWorkflowStep(
         workflowEventItem.item.id,
         Constants.kontentDefaultLanguageId,

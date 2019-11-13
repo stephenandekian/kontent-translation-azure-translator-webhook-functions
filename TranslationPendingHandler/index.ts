@@ -36,7 +36,11 @@ async function startNewTranslation(
   const firstLanguage = t9nDetails.selectedLanguages.length > 0 ? t9nDetails.selectedLanguages[0] : null
 
   if (!firstLanguage) {
-    return
+    throw Error('First language is not defined')
+  }
+
+  if (!defaultLanguageVariant.item.id) {
+    throw Error('Item ID is undefined')
   }
 
   await KontentHelpers.changeWorkflowStep(
@@ -53,8 +57,8 @@ async function clearTranslationTimestamps(
   t9nDetails.selectedLanguages = t9nDetails.selectedLanguages.map(language => {
     return {
       ...language,
-      completed: null,
-      started: null,
+      completed: undefined,
+      started: undefined,
     }
   })
 
@@ -66,15 +70,23 @@ async function translateLanguageVariant(
   currentLanguageId: string
 ): Promise<void> {
   const t9nDetails = await KontentHelpers.getTranslationDetails(defaultLanguageVariant)
+
   const currentLanguage = t9nDetails.selectedLanguages.find(language => language.id === currentLanguageId)
+  if (!currentLanguage) {
+    throw Error('Current language is undefined')
+  }
 
   // Set language started timestamp in DLV
-  KontentHelpers.updateTimestamp(t9nDetails, currentLanguageId, 'started')
+  KontentHelpers.updateTimestamp(t9nDetails, currentLanguageId, Models.Timestamps.Started)
 
   // Upsert DLV to save LV timestamps
   await KontentHelpers.updateTranslationDetails(t9nDetails, defaultLanguageVariant)
 
   // Get elements to translate from DLV
+  if (!defaultLanguageVariant.item.id) {
+    throw Error('Item ID is undefined')
+  }
+
   const contentItem = await KontentHelpers.getContentItemById(defaultLanguageVariant.item.id)
   const contentType = await KontentHelpers.getContentType(contentItem.type.id)
   const translatableElementIds = getTranslatableElementIds(contentType.elements)
@@ -116,14 +128,18 @@ function getTranslatableElementValues(
   elementValues: ElementModels.ContentItemElement[],
   elementIds: string[]
 ): ElementModels.ContentItemElement[] {
-  return elementValues.filter(element => elementIds.includes(element.element.id))
+  return elementValues.filter(element => {
+    return element.element.id ? elementIds.includes(element.element.id) : false
+  })
 }
 
 function getUntranslatableElementValues(
   elementValues: ElementModels.ContentItemElement[],
   elementIds: string[]
 ): ElementModels.ContentItemElement[] {
-  return elementValues.filter(element => !elementIds.includes(element.element.id))
+  return elementValues.filter(element => {
+    return element.element.id ? !elementIds.includes(element.element.id) : false
+  })
 }
 
 export default httpTrigger
