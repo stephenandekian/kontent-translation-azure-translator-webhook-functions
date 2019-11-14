@@ -23,7 +23,11 @@ Features:
 
 This is deployed like any other Azure function project. You can [automate the deployment](https://docs.microsoft.com/en-us/azure/azure-functions/functions-continuous-deployment) or [manually deploy](https://docs.microsoft.com/en-us/azure/javascript/tutorial-vscode-serverless-node-01) with the [Azure Functions extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions).
 
-## Configuring Kentico Kontent
+## Configuring Languages in Kontent
+
+When configuring your languages in Kontent, the translation connector relies on the language codename matching one of the [language codes supported by Microsoft's Translator API](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/language-support)
+
+## Configuring Webhooks in Kontent
 
 You'll need to configure two [webhooks](https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates). The project must be [deployed to Azure](#deploying-to-azure) or you must be able to pipe requests to your local machine via a public URL using a tool like [ngrok](https://ngrok.com/). Either way you need a publicly accessible URL for Kontent to be able to send requests to.
 
