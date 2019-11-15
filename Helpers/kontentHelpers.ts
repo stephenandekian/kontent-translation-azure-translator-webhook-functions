@@ -85,20 +85,33 @@ export async function getContentType(contentTypeId: string): Promise<ContentType
 export async function getDefaultLanguageVariant(
   contentItemId: string
 ): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
-  return await getLanguageVariant(contentItemId, Constants.kontentDefaultLanguageId)
+  const defaultLanguage = await getLanguageVariant(contentItemId, Constants.kontentDefaultLanguageId)
+  if (!defaultLanguage) {
+    throw Error('Could not get default language')
+  }
+
+  return defaultLanguage
 }
 
 export async function getLanguageVariant(
   contentItemId: string,
   languageId: string
-): Promise<LanguageVariantModels.ContentItemLanguageVariant> {
-  const clientResponse = await client
-    .viewLanguageVariant()
-    .byItemId(contentItemId)
-    .byLanguageId(languageId)
-    .toPromise()
+): Promise<LanguageVariantModels.ContentItemLanguageVariant | null> {
+  try {
+    const clientResponse = await client
+      .viewLanguageVariant()
+      .byItemId(contentItemId)
+      .byLanguageId(languageId)
+      .toPromise()
 
-  return clientResponse.data
+    return clientResponse.data
+  } catch (e) {
+    if (e.originalError.response.status === 404) {
+      return null
+    } else {
+      throw e
+    }
+  }
 }
 
 export async function getTranslationDetails(
