@@ -1,6 +1,6 @@
 # Kentico Kontent Translation Connector: Azure Functions
 
-This is an [Azure functions](https://azure.microsoft.com/en-us/services/functions/) project designed to enable automated translation for [Kentico Kontent](https://kontent.ai) using   webhooks. It automatically translates all text and rich text elements from the default language into editor selected languages via a companion [custom element](https://github.com/ChristopherJennings/kontent-translation-connector-custom-element).
+This is an [Azure functions](https://azure.microsoft.com/en-us/services/functions/) project designed to enable automated translation for [Kentico Kontent](https://kontent.ai) using   webhooks. It automatically translates all text and rich text elements from the default language into editor selected languages via a companion [custom element](https://github.com/Kentico/kontent-translation-connector-custom-element).
 
 Features:
 
