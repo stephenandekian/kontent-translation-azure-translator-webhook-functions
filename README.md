@@ -9,7 +9,7 @@ Features:
 
 ## Setup and running locally
 
-1. Before configuring the Azure functions, you need to [configure the companion custom element](https://github.com/ChristopherJennings/kontent-translation-connector-custom-element) as the functions presume that the custom element is present.
+1. Before configuring the Azure functions, you need to [configure the companion custom element](https://github.com/Kentico/kontent-translation-connector-custom-element) as the functions presume that the custom element is present.
 1. On your local machine, install the [Azure Functions extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions).
 1. Open the project in VS Code.
 1. Copy and rename the [local.settings.template.json](local.settings.template.json) to `local.settings.json`
