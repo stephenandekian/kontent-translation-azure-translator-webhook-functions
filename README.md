@@ -1,6 +1,6 @@
-# Kentico Kontent Translation Connector: Azure Functions
+# Azure Translator Text API Connector Webhook Functions
 
-This is an [Azure functions](https://azure.microsoft.com/en-us/services/functions/) project designed to enable automated translation for [Kentico Kontent](https://kontent.ai) using   webhooks. It automatically translates all text and rich text elements from the default language into editor selected languages via a companion [custom element](https://github.com/Kentico/kontent-translation-connector-custom-element).
+This is an [Azure functions](https://azure.microsoft.com/en-us/services/functions/) project designed to enable automated translation for [Kentico Kontent](https://kontent.ai) using webhooks. It automatically translates all text and rich text elements from the default language into editor selected languages via a companion [custom element](https://github.com/Kentico/kontent-translation-azure-translator-custom-element/).
 
 Features:
 
@@ -9,7 +9,7 @@ Features:
 
 ## Setup and running locally
 
-1. Before configuring the Azure functions, you need to [configure the companion custom element](https://github.com/Kentico/kontent-translation-connector-custom-element) as the functions presume that the custom element is present.
+1. Before configuring the Azure functions, you need to [configure the companion custom element](https://github.com/Kentico/kontent-translation-azure-translator-custom-element/) as the functions presume that the custom element is present.
 1. On your local machine, install the [Azure Functions extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions).
 1. Open the project in VS Code.
 1. Copy and rename the [local.settings.template.json](local.settings.template.json) to `local.settings.json`
