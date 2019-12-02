@@ -1,4 +1,4 @@
-# Azure Translator Text API Connector Webhook Functions
+# Azure Translator Text API Connector for Kontent: Webhook Functions
 
 This is an [Azure functions](https://azure.microsoft.com/en-us/services/functions/) project designed to enable automated translation for [Kentico Kontent](https://kontent.ai) using webhooks. It automatically translates all text and rich text elements from the default language into editor selected languages via a companion [custom element](https://github.com/Kentico/kontent-translation-azure-translator-custom-element/).
 
