@@ -60,3 +60,7 @@ KontentTranslationSnippetCodename | `<YOUR_TRANSLATION_SNIPPET_CODENAME>` | The 
 KontentTranslationElementCodename | `<YOUR_TRANSLATION_ELEMENT_CODENAME>` | The codename of the custom element you added. You can get this in Kontent by going to "Content Models > Content type snippets", opening your sontentctype snippet, and copying the codename from the codename icon to the right of your custom element. |
 AzureTranslatorTextEndpoint | `https://api.cognitive.microsofttranslator.com/` | This is the base URL for the Azure translation API. You shouldn't need to change this. |
 AzureTranslatorTextKey | `<YOUR_AZURE_TRANSLATOR_KEY>` | This is the API key that Azure Translator gives you to make calls to their API. Check out [How to sign up for the Translator Text API](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup) for more details. |
+
+## Contributors
+
+Originally contributed by [@ChristopherJennings](https://github.com/ChristopherJennings)
