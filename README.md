@@ -29,7 +29,7 @@ When configuring your languages in Kontent, the translation connector relies on 
 
 ## Configuring Webhooks in Kontent
 
-You'll need to configure two [webhooks](https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates). The project must be [deployed to Azure](#deploying-to-azure) or you must be able to pipe requests to your local machine via a public URL using a tool like [ngrok](https://ngrok.com/). Either way you need a publicly accessible URL for Kontent to be able to send requests to.
+You'll need to configure two [webhooks](https://kontent.ai/learn/tutorials/develop-apps/integrate/webhooks). The project must be [deployed to Azure](#deploying-to-azure) or you must be able to pipe requests to your local machine via a public URL using a tool like [ngrok](https://ngrok.com/). Either way you need a publicly accessible URL for Kontent to be able to send requests to.
 
 ### Translation pending webhook
 
@@ -53,9 +53,9 @@ The project requires a several environment variables to be configured in order f
 | ---- | ----- | ----------- |
 KontentProjectId | `<YOUR_PROJECT_ID>` | Your project's ID |
 KontentManagementApiKey | `<YOUR_CM_API_KEY>` | Your project's CM API Key. You can get this in Kontent under "Settings > API Keys > Project ID" |
-KontentTranslationPendingWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the workflow step that triggers the translation connector. You can get this using the [retrieve workflow steps](https://docs.kontent.ai/reference/content-management-api-v2#operation/retrieve-workflow-steps) API endpoint. |
-KontentTranslationReviewWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the workflow step that the translation connector puts content items into after it's done. You can get this using the [retrieve workflow steps](https://docs.kontent.ai/reference/content-management-api-v2#operation/retrieve-workflow-steps) API endpoint.|
-KontentPublishedWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the published workflow step. You can get this using the [retrieve workflow steps](https://docs.kontent.ai/reference/content-management-api-v2#operation/retrieve-workflow-steps) API endpoint.|
+KontentTranslationPendingWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the workflow step that triggers the translation connector. You can get this using the [retrieve workflow steps](https://kontent.ai/learn/reference/content-management-api-v2#operation/retrieve-workflow-steps) API endpoint. |
+KontentTranslationReviewWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the workflow step that the translation connector puts content items into after it's done. You can get this using the [retrieve workflow steps](https://kontent.ai/learn/reference/management-api-v2#operation/retrieve-workflow-steps) API endpoint.|
+KontentPublishedWorkflowStepId | `<WORKFLOW_GUID>` | The GUID of the published workflow step. You can get this using the [retrieve workflow steps](https://kontent.ai/learn/reference/management-api-v2#operation/retrieve-workflow-steps) API endpoint.|
 KontentTranslationSnippetCodename | `<YOUR_TRANSLATION_SNIPPET_CODENAME>` | The codname of the content type snippet you added the custom element to. You can get this in Kontent by going to "Content Models > Content type snippets", opening your content type snippet, and copying the codename from the codename icon in the top right corner of the page.  |
 KontentTranslationElementCodename | `<YOUR_TRANSLATION_ELEMENT_CODENAME>` | The codename of the custom element you added. You can get this in Kontent by going to "Content Models > Content type snippets", opening your sontentctype snippet, and copying the codename from the codename icon to the right of your custom element. |
 AzureTranslatorTextEndpoint | `https://api.cognitive.microsofttranslator.com/` | This is the base URL for the Azure translation API. You shouldn't need to change this. |
