@@ -178,7 +178,7 @@ export async function updateTranslationDetails(
 ): Promise<void> {
   const t9nElement: LanguageVariantModels.ILanguageVariantElement = {
     element: {
-      codename: `${Constants.kontentTranslationSnippetCodename}`,//__${Constants.kontentTranslationElementCodename}`,
+      codename: `${Constants.kontentTranslationSnippetCodename}__${Constants.kontentTranslationElementCodename}`,
     },
     value: JSON.stringify(t9nDetails),
   }
